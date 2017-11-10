@@ -1,0 +1,23 @@
+const express = require('express');
+const morgan = require('morgan');
+const nunjucks = require('nunjucks');
+const bodyParser = require('body-parser');
+const app = express();
+const makesRouter = require('./routes')
+const path = require('path');
+
+app.engine('html', nunjucks.render); // how to render html templates
+app.set('view engine', 'html');
+nunjucks.configure('views', { noCache: true });
+
+app.listen(1337, function() {
+  console.log('Server is on port 1337');
+})
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, '/public')));
+
+app.use(morgan('dev'));
+
+app.use(makesRouter);

@@ -6,9 +6,15 @@ const app = express();
 const makesRouter = require('./routes')
 const path = require('path');
 
+const models = require('models')
+
 app.engine('html', nunjucks.render); // how to render html templates
 app.set('view engine', 'html');
 nunjucks.configure('views', { noCache: true });
+
+
+
+
 
 app.listen(1337, function() {
   console.log('Server is on port 1337');

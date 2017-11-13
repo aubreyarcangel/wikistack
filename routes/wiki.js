@@ -18,11 +18,13 @@ router.post('/', (req, res, next) => {
   })
   .then((values) => {
   const user = values[0];
-  const title = req.body.title
-  const content = req.body.content
+  const title = req.body.title;
+  const content = req.body.content;
+  const tags = req.body.tags.split(' ');
   const page = Page.build({
     title,
-    content
+    content,
+    tags
   });
   return page.save().then((page)=> {
     return page.setAuthor(user);
@@ -35,6 +37,19 @@ router.post('/', (req, res, next) => {
 
 router.get('/add', (req, res, next) => {
   res.render('addpage');
+});
+
+router.get('/search', (req, res, next) => {
+  Page.findAll({ 
+    where: {
+      tags: {
+        $overlap: [req.query.tag]
+      }
+    }
+  })
+  .then((posts) => {
+    res.render('search', {posts})
+  }) 
 });
 
 router.get('/:urlTitle', (req, res, next) => {
